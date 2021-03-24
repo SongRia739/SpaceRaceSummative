@@ -26,6 +26,15 @@ namespace SpaceRaceSummative
         int playerWidth = 15;
         int playerSpeed = 10;
 
+        List<int> leftObsticalX = new List<int>();
+        List<int> rightObsticalX = new List<int>();
+        List<int> leftObsticalY = new List<int>();
+        List<int> rightObsticalY = new List<int>();
+
+        int obsticalWidth = 10;
+        int obsticalHeight = 35;
+        int obsticalSpeed = 10;
+
         //keys
         bool wDown = false;
         bool sDown = false;
@@ -112,7 +121,14 @@ namespace SpaceRaceSummative
                 e.Graphics.FillEllipse(purpleBrush, p2X, p2Y, playerWidth, playerHeight);
 
                 //draw obsticals
-
+                for (int i = 0; i < leftObsticalX.Count; i++)
+                {
+                    e.Graphics.FillRectangle(whiteBrush, leftObsticalX[i], leftObsticalY[i], obsticalWidth, obsticalHeight);
+                }
+                for (int i = 0; i < rightObsticalX.Count; i++)
+                {
+                    e.Graphics.FillRectangle(whiteBrush, rightObsticalX[i], rightObsticalY[i], obsticalWidth, obsticalHeight);
+                }
             }
             else if (gameState == "gameWon")
             {
@@ -147,6 +163,10 @@ namespace SpaceRaceSummative
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            Random ranGen = new Random();
+
+            obsticalCounter++;
+
             //move player 1
             if (wDown == true && p1Y > 0)
             {
@@ -167,19 +187,87 @@ namespace SpaceRaceSummative
                 p2Y += playerSpeed;
             }
 
+            //move obsticals
+            if (obsticalCounter == 3)
+            {
+                leftObsticalY.Add(ranGen.Next(10, this.Height - 50));
+                leftObsticalX.Add(10);
+
+                rightObsticalY.Add(ranGen.Next(10, this.Height - 50));
+                rightObsticalX.Add(this.Width - obsticalWidth);
+
+                obsticalCounter = 0;
+            }
+            for (int i = 0; i < leftObsticalX.Count(); i++)
+            {
+                leftObsticalX[i] += obsticalSpeed;
+            }
+            for (int i = 0; i < leftObsticalX.Count(); i++)
+            {
+                if (leftObsticalX[i] > this.Width)
+                {
+                    leftObsticalX.RemoveAt(i);
+                    leftObsticalY.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < rightObsticalX.Count(); i++)
+            {
+                rightObsticalX[i] += obsticalSpeed;
+
+            }
+            for (int i = 0; i < rightObsticalX.Count(); i++)
+            {
+
+                if (rightObsticalX[i] > this.Width)
+                {
+                    rightObsticalX.RemoveAt(i);
+                    rightObsticalY.RemoveAt(i);
+                }
+            }
+            //collision 
+            Rectangle p1Rec = new Rectangle(p1X, p1Y, playerWidth, playerHeight);
+            Rectangle p2Rec = new Rectangle(p2X, p2Y, playerWidth, playerHeight);
+
+            for (int i = 0; i < leftObsticalX.Count(); i++)
+            {
+                Rectangle leftObsticalRec = new Rectangle(leftObsticalX[i], leftObsticalY[i], obsticalWidth, obsticalHeight);
+
+                if (p1Rec.IntersectsWith(leftObsticalRec))
+                {
+                    p1Y = 510;
+                }
+                if (p2Rec.IntersectsWith(leftObsticalRec))
+                {
+                    p2Y = 510;
+                }
+            }
+            for (int i = 0; i < rightObsticalX.Count(); i++)
+            {
+                Rectangle rightObsticalRec = new Rectangle(rightObsticalX[i], rightObsticalY[i], obsticalWidth, obsticalHeight);
+
+                if (p1Rec.IntersectsWith(rightObsticalRec))
+                {
+                    p1Y = 510;
+                }
+                if (p2Rec.IntersectsWith(rightObsticalRec))
+                {
+                    p2Y = 510;
+                }
+            }
+
             //score
             if (p1Y < 3)
             {
                 p1Score++;
                 p1ScoreLabel.Text = $"{p1Score}";
-               
+
                 p1Y = 510;
             }
             else if (p2Y < 3)
             {
                 p2Score++;
                 p2ScoreLabel.Text = $"{p2Score}";
-                
+
                 p2Y = 510;
             }
 
