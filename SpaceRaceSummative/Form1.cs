@@ -7,11 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
 
+//Ria Das
+//Two player Space race game where who ever gets 3 points first, wins
 namespace SpaceRaceSummative
 {
     public partial class Form1 : Form
     {
+        SoundPlayer bells = new SoundPlayer(Properties.Resources.bells);
+
         string gameState = "waiting";
 
         int p1X = 260;
@@ -234,10 +239,12 @@ namespace SpaceRaceSummative
 
                 if (p1Rec.IntersectsWith(leftObsticalRec))
                 {
+                    bells.Play();
                     p1Y = 510;
                 }
                 if (p2Rec.IntersectsWith(leftObsticalRec))
                 {
+                    bells.Play();
                     p2Y = 510;
                 }
             }
@@ -247,10 +254,12 @@ namespace SpaceRaceSummative
 
                 if (p1Rec.IntersectsWith(rightObsticalRec))
                 {
+                    bells.Play();
                     p1Y = 510;
                 }
                 if (p2Rec.IntersectsWith(rightObsticalRec))
                 {
+                    bells.Play();
                     p2Y = 510;
                 }
             }
