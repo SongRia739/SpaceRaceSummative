@@ -55,6 +55,9 @@ namespace SpaceRaceSummative
         SolidBrush whiteBrush = new SolidBrush(Color.White);
 
         int obsticalCounter = 0;
+
+        Random ranGen = new Random();
+
         public Form1()
         {
             InitializeComponent();
@@ -168,8 +171,7 @@ namespace SpaceRaceSummative
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            Random ranGen = new Random();
-
+         
             obsticalCounter++;
 
             //move player 1
